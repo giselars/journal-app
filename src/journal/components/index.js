@@ -1,3 +1,3 @@
-export * from './Navbar';
+export * from './NavBar';
 export * from './Sidebar';
 export * from './ImageGallery';
