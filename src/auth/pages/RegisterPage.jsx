@@ -1,8 +1,11 @@
+import { useDispatch, useSelector } from 'react-redux';
 import { useState, useMemo } from 'react';
 import {Link as RouterLink} from 'react-router-dom';
-import { Button, Grid, Link, TextField, Typography } from "@mui/material";
+import { Alert, Button, Grid, Link, TextField, Typography } from "@mui/material";
 import { AuthLayout } from '../layout/AuthLayout';
 import { useForm } from '../../hooks';
+import { startCreatingUserWithEmailPassword } from '../../store/auth';
+
 
 
 const formData = {
@@ -19,8 +22,10 @@ const formValidations = {
 
 export const RegisterPage = () => {
 
+  const dispatch = useDispatch();
   const [ formSubmitted, setFormSubmitted] = useState(false);
 
+  const { status, errorMessage } = useSelector( state => state.auth );
 
   const { 
     formState, displayName, email, password, onInputChange,
@@ -34,7 +39,7 @@ export const RegisterPage = () => {
     setFormSubmitted(true);
 
     if (!isFormValid ) return;
-    console.log( formState );
+    dispatch( startCreatingUserWithEmailPassword( formState ) );
   }
 
   return (
@@ -71,7 +76,7 @@ export const RegisterPage = () => {
             />
           </Grid>
 
-          <Grid item xs={12} sx={{ mt:2 }}>
+          <Grid item xs={12} sx={{ mb:2, mt:2 }}>
             <TextField
               label="Contraseña"
               type="password"
@@ -85,9 +90,18 @@ export const RegisterPage = () => {
             />
           </Grid>
 
+            <Grid 
+              item 
+              xs={ 12 }
+              display={ !!errorMessage ? '' : 'none'}
+            >
+              <Alert security='error'>{ errorMessage }</Alert>
+            </Grid>
+
           <Grid container spacing={ 2 } sx={{ mb:2, mt:1 }}>
             <Grid item xs={ 12 }>
               <Button 
+                disabled={ isCheckingAuthentication }
                 type='onSubmit'
                 variant="contained" 
                 fullWidth>
