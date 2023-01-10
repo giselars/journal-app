@@ -1,11 +1,11 @@
-
+import { getEnvironments } from "../helpers";
 
 export const fileUpload = async(file) => {
     // if ( !file ) throw new Error('No tenemos ningún archivo a subir');
     if ( !file ) return null;
 
-    const cloud_name = 'demo';
-    const cloudUrl = `https://api.cloudinary.com/v1_1/${ cloud_name }/upload`;
+    const { CLOUD_NAME } = getEnvironments();
+    const cloudUrl = `https://api.cloudinary.com/v1_1/${ CLOUD_NAME }/upload`;
 
     const formData = new FormData();
     formData.append('upload_preset', 'react-journal');
